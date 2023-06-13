@@ -4,3 +4,33 @@
   become: yes
   connection: ssh
   gather_facts: yes
+
+
+Write a playbook for installation of apache in ubuntu and centos?
+---
+- name: Install Apache
+  hosts: all
+  become: yes
+  vars:
+    http_packages:
+      Ubuntu: apache2
+      CentOS: httpd
+
+  tasks:
+    - name: Update package cache
+      apt:
+        update_cache: yes
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Install Apache
+      package:
+        name: "{{ http_packages[ansible_distribution] }}"
+        state: present
+
+    - name: Start Apache service
+      service:
+        name: "{{ http_packages[ansible_distribution] }}"
+        state: started
+        enabled: yes
+
+ansible-playbook -i inventory_file install_apache.yml
