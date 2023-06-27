@@ -1,0 +1,36 @@
+trigger:
+  branches:
+    include:
+      - main
+
+stages:
+  - stage: Build
+    displayName: 'Build Stage'
+    jobs:
+      - job: BuildJob
+        displayName: 'Build Job'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              # Run build commands here
+              echo "Running build commands"
+          # Add additional build steps as needed
+
+  - stage: Deploy
+    displayName: 'Deploy Stage'
+    dependsOn: Build
+    jobs:
+      - deployment: DeployJob
+        displayName: 'Deploy Job'
+        environment: 'Production'
+        pool:
+          vmImage: 'ubuntu-latest'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    # Run deployment commands here
+                    echo "Running deployment commands"
+                # Add additional deployment steps as needed
