@@ -1,0 +1,19 @@
+Tagging Exercise
+
+#Connect-AzAccount
+#Set-AzContext -Subscription f764bd20-9fd8-4acf-9fa6-9295a455c769
+$Resources =  Import-Csv 'C:\Users\Downloads\RG_TAG_Test.csv'
+ 
+Foreach($Resource in $Resources)
+{
+ 
+$Resource.RESOURCEGROUP
+$type = $Resource.ApplicationType
+$res = $null
+$temp = "ApplicationType"
+$dname = $Resource.NAME
+$rgname = $Resource.Resourcegroup 
+$res = Get-AzResource -Name $dname -ResourceGroupName $rgname
+Update-AzTag -ResourceId $res.ResourceId -Tag @{ApplicationType=$type} -Operation Merge
+} 
+
