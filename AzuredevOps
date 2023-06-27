@@ -17,9 +17,37 @@ stages:
               echo "Running build commands"
           # Add additional build steps as needed
 
+  - stage: Test
+    displayName: 'Test Stage'
+    dependsOn: Build
+    jobs:
+      - job: TestJob
+        displayName: 'Test Job'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              # Run test commands here
+              echo "Running test commands"
+          # Add additional test steps as needed
+
+  - stage: SonarQube
+    displayName: 'SonarQube Stage'
+    dependsOn: Test
+    jobs:
+      - job: SonarQubeJob
+        displayName: 'SonarQube Job'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              # Run SonarQube analysis
+              echo "Running SonarQube analysis"
+          # Add additional SonarQube steps as needed
+
   - stage: Deploy
     displayName: 'Deploy Stage'
-    dependsOn: Build
+    dependsOn: SonarQube
     jobs:
       - deployment: DeployJob
         displayName: 'Deploy Job'
